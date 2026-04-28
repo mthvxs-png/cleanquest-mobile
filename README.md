@@ -25,6 +25,13 @@ npm install
 npm start
 ```
 
+## Documentacao de continuidade
+
+Os materiais para continuar o projeto agora ficam em `docs/`:
+- `docs/handoff.md`
+- `docs/pixel-art-assets.md`
+- `docs/README.md`
+
 ## Persistencia
 
 O app salva no Firestore:
