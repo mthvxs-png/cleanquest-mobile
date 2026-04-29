@@ -27,7 +27,7 @@ export const MissionsScreen = (): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <Card style={styles.loginCard}>
+      <Card style={styles.loginCard} variant="reward">
         <Text style={styles.loginTitle}>{t("missions.loginRewardTitle")}</Text>
         <Text style={styles.loginText}>{t("missions.loginRewardSubtitle")}</Text>
         <ProgressBar progress={Math.min(loginRewards.day, 7) / 7} tone="accent" />
@@ -62,6 +62,7 @@ export const MissionsScreen = (): React.JSX.Element => {
                 }}
                 disabled={mission.swapUsed || dailyMissions.rerollsLeft <= 0}
                 tone="secondary"
+                style={styles.actionButton}
               />
               <PrimaryButton
                 label={completed ? t("missions.completed") : t("missions.complete")}
@@ -70,6 +71,8 @@ export const MissionsScreen = (): React.JSX.Element => {
                 }}
                 disabled={completed}
                 tone="accent"
+                selected={completed}
+                style={styles.actionButton}
               />
             </View>
           </Card>
@@ -134,5 +137,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: theme.spacing.sm,
     marginTop: theme.spacing.md,
+  },
+  actionButton: {
+    flex: 1,
   },
 });

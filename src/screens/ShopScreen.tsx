@@ -49,6 +49,7 @@ export const ShopScreen = (): React.JSX.Element => {
                   }}
                   disabled={active || progression.coins < BUFF_COSTS[buffType]}
                   tone="secondary"
+                  selected={active}
                 />
               </View>
             );
@@ -57,7 +58,7 @@ export const ShopScreen = (): React.JSX.Element => {
       </Card>
 
       {chestRarities.map((rarity) => (
-        <Card key={rarity}>
+        <Card key={rarity} variant={rarity === "legendary" ? "reward" : "base"}>
           <Text style={styles.rarity}>{t(`shop.rarities.${rarity}`)}</Text>
           <Text style={styles.cost}>{t("shop.cost", { cost: CHEST_COSTS[rarity] })}</Text>
           <PrimaryButton
@@ -66,6 +67,7 @@ export const ShopScreen = (): React.JSX.Element => {
               void buyChest(rarity);
             }}
             disabled={shop.chestInventory.coins < CHEST_COSTS[rarity]}
+            style={styles.buyButton}
           />
         </Card>
       ))}
@@ -123,5 +125,8 @@ const styles = StyleSheet.create({
   cost: {
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
+  },
+  buyButton: {
+    alignSelf: "stretch",
   },
 });

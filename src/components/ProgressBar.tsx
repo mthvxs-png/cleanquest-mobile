@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { theme } from "../theme/tokens";
+import { Image, ImageBackground, StyleSheet, View } from "react-native";
+import { uiAssets } from "../theme/uiAssets";
 
 interface ProgressBarProps {
   progress: number;
@@ -8,35 +8,39 @@ interface ProgressBarProps {
 }
 
 export const ProgressBar = ({ progress, tone = "primary" }: ProgressBarProps): React.JSX.Element => {
+  const fillSource = tone === "primary" ? uiAssets.bars.fillPrimary : uiAssets.bars.fillGold;
+
   return (
-    <View style={styles.track}>
-      <View style={[styles.fill, toneStyles[tone], { width: `${Math.max(0, Math.min(progress, 1)) * 100}%` }]} />
-    </View>
+    <ImageBackground source={uiAssets.bars.frame} style={styles.frame} imageStyle={styles.frameImage} resizeMode="stretch">
+      <View style={styles.track}>
+        <View style={[styles.fillClip, { width: `${Math.max(0, Math.min(progress, 1)) * 100}%` }]}>
+          <Image source={fillSource} style={styles.fillImage} resizeMode="stretch" />
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
-const toneStyles = StyleSheet.create({
-  primary: {
-    backgroundColor: theme.colors.primary,
-  },
-  accent: {
-    backgroundColor: theme.colors.accent,
-  },
-  secondary: {
-    backgroundColor: theme.colors.secondary,
-  },
-});
-
 const styles = StyleSheet.create({
-  track: {
+  frame: {
     width: "100%",
-    height: 10,
-    borderRadius: theme.radius.pill,
-    backgroundColor: theme.colors.surfaceAlt,
+    height: 24,
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  frameImage: {
+    resizeMode: "stretch",
+  },
+  track: {
+    height: 12,
+    justifyContent: "center",
+  },
+  fillClip: {
+    height: "100%",
     overflow: "hidden",
   },
-  fill: {
+  fillImage: {
+    width: "100%",
     height: "100%",
-    borderRadius: theme.radius.pill,
   },
 });

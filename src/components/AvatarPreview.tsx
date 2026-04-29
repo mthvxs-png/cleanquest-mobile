@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { COSMETIC_DEFINITIONS } from "../application/mockData";
 import { theme } from "../theme/tokens";
 import type { CharacterState } from "../types/app";
+import { uiAssets } from "../theme/uiAssets";
 
 interface AvatarPreviewProps {
   character: CharacterState;
@@ -15,7 +16,7 @@ export const AvatarPreview = ({ character, size = "sm" }: AvatarPreviewProps): R
   const isLarge = size === "lg";
 
   return (
-    <View style={[styles.frame, isLarge ? styles.frameLarge : styles.frameSmall]}>
+    <ImageBackground source={uiAssets.panels.dark} style={[styles.frame, isLarge ? styles.frameLarge : styles.frameSmall]} imageStyle={styles.frameImage} resizeMode="stretch">
       <View style={styles.glow} />
       <Text style={[styles.body, isLarge ? styles.bodyLarge : styles.bodySmall]}>
         {character.bodyType === "female" ? "Aventureira" : "Aventureiro"}
@@ -23,20 +24,19 @@ export const AvatarPreview = ({ character, size = "sm" }: AvatarPreviewProps): R
       <Text style={styles.line}>{t(COSMETIC_DEFINITIONS[character.equipped.outfits].nameKey)}</Text>
       <Text style={styles.line}>{t(COSMETIC_DEFINITIONS[character.equipped.hats].nameKey)}</Text>
       <Text style={styles.line}>{t(COSMETIC_DEFINITIONS[character.equipped.pets].nameKey)}</Text>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   frame: {
-    borderRadius: theme.radius.lg,
-    backgroundColor: "#FFE6D4",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     gap: 8,
+  },
+  frameImage: {
+    resizeMode: "stretch",
   },
   frameSmall: {
     width: 108,
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     top: -30,
   },
   body: {
-    color: theme.colors.text,
+    color: "#FFF6DC",
     fontWeight: "800",
     textAlign: "center",
   },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   line: {
-    color: theme.colors.textMuted,
+    color: "#E2C99E",
     fontSize: 13,
     fontWeight: "700",
     textAlign: "center",

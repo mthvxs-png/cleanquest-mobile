@@ -5,6 +5,7 @@ import { Card } from "../components/Card";
 import { AuthCard } from "../components/AuthCard";
 import { AvatarPreview } from "../components/AvatarPreview";
 import { ScreenContainer } from "../components/ScreenContainer";
+import { StatPill } from "../components/StatPill";
 import { getFixedTasks } from "../game";
 import { formatCountdown } from "../application/formatters";
 import { theme } from "../theme/tokens";
@@ -38,16 +39,16 @@ export const HomeScreen = (): React.JSX.Element => {
     <ScreenContainer>
       {authState.status !== "signedIn" ? <AuthCard mode="full" /> : null}
 
-      <Card style={styles.heroCard}>
+      <Card style={styles.heroCard} variant="panelLight">
         <AvatarPreview character={character} size="sm" />
         <View style={styles.heroText}>
           <Text style={styles.title}>{t("home.welcome")}</Text>
           <Text style={styles.subtitle}>{t("app.subtitle")}</Text>
           <View style={styles.statsRow}>
-            <Text style={styles.statText}>{t("home.levelShort", { level: progression.level })}</Text>
-            <Text style={styles.statText}>{t("home.xpShort", { current: progression.xpIntoLevel, required: progression.xpRequiredForNextLevel })}</Text>
-            <Text style={styles.statText}>{t("home.coinsShort", { count: progression.coins })}</Text>
-            <Text style={styles.statText}>{t("home.streakShort", { count: streak.current })}</Text>
+            <StatPill label="LV" value={String(progression.level)} />
+            <StatPill label="XP" value={`${progression.xpIntoLevel}/${progression.xpRequiredForNextLevel}`} iconName="xp" />
+            <StatPill label={t("shop.title")} value={String(progression.coins)} iconName="coin" />
+            <StatPill label="Streak" value={String(streak.current)} iconName="streak" />
           </View>
         </View>
       </Card>
@@ -118,19 +119,8 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    flexWrap: "nowrap",
+    flexWrap: "wrap",
     gap: 6,
-  },
-  statText: {
-    flex: 1,
-    color: theme.colors.text,
-    fontSize: 12,
-    fontWeight: "800",
-    backgroundColor: theme.colors.surface,
-    paddingVertical: 8,
-    paddingHorizontal: 6,
-    borderRadius: theme.radius.md,
-    textAlign: "center",
   },
   cardLabel: {
     color: theme.colors.text,

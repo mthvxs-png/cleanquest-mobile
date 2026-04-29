@@ -60,7 +60,7 @@ export const TasksScreen = (): React.JSX.Element => {
               const isSelected = selectedTaskIds.includes(task.id);
 
               return (
-                <Card key={task.id} style={isSelected ? styles.cardSelected : undefined}>
+                <Card key={task.id} style={isSelected ? styles.cardSelected : undefined} variant={isSelected ? "selected" : "base"}>
                   <View style={styles.topRow}>
                     <View style={styles.taskText}>
                       <Text style={styles.taskTitle}>{task.title}</Text>
@@ -73,6 +73,7 @@ export const TasksScreen = (): React.JSX.Element => {
                       label={isSelected ? t("tasks.remove") : t("tasks.select")}
                       onPress={() => toggleTaskSelection(task.id)}
                       tone={isSelected ? "accent" : "secondary"}
+                      selected={isSelected}
                     />
                   </View>
 
@@ -87,6 +88,7 @@ export const TasksScreen = (): React.JSX.Element => {
                           }}
                           disabled={!canComplete}
                           tone="primary"
+                          style={styles.actionButton}
                         />
                         <PrimaryButton
                           label={t("tasks.completeNow")}
@@ -94,18 +96,20 @@ export const TasksScreen = (): React.JSX.Element => {
                             void completeTaskInstantly(task.id, now);
                           }}
                           tone="accent"
+                          style={styles.actionButton}
                         />
                       </View>
                     </View>
                   ) : (
                     <View style={styles.buttonRow}>
-                      <PrimaryButton label={t("tasks.start")} onPress={() => startTask(task.id, now)} />
+                      <PrimaryButton label={t("tasks.start")} onPress={() => startTask(task.id, now)} style={styles.actionButton} />
                       <PrimaryButton
                         label={t("tasks.completeNow")}
                         onPress={() => {
                           void completeTaskInstantly(task.id, now);
                         }}
                         tone="accent"
+                        style={styles.actionButton}
                       />
                     </View>
                   )}
@@ -174,5 +178,8 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: "row",
     gap: theme.spacing.sm,
+  },
+  actionButton: {
+    flex: 1,
   },
 });

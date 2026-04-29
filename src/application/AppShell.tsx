@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { HomeScreen } from "../screens/HomeScreen";
 import { TasksScreen } from "../screens/TasksScreen";
@@ -12,6 +12,8 @@ import { useGameStore } from "../store/useGameStore";
 import type { AppTab } from "../types/app";
 import { useShallow } from "zustand/react/shallow";
 import { useNowTicker } from "./useNowTicker";
+import { PixelIcon } from "../components/PixelIcon";
+import { uiAssets } from "../theme/uiAssets";
 
 const tabs: AppTab[] = ["home", "tasks", "missions", "shop", "avatar"];
 
@@ -36,15 +38,27 @@ export const AppShell = (): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerInfo}>
           <Text style={styles.headerTitle}>{t("app.title")}</Text>
           <Text style={styles.headerSubtitle}>
             {showSettings ? t("settings.title") : t(`tabs.${activeTab}`)}
           </Text>
         </View>
-        <Pressable onPress={() => setShowSettings((current) => !current)} style={styles.settingsButton}>
-          <Text style={styles.settingsLabel}>{t("settings.title")}</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          {activeTab !== "home" && !showSettings ? (
+            <Pressable
+              onPress={() => {
+                setActiveTab("home");
+              }}
+              style={styles.headerButton}
+            >
+              <Image source={uiAssets.buttons.back} style={styles.headerButtonImage} resizeMode="contain" />
+            </Pressable>
+          ) : null}
+          <Pressable onPress={() => setShowSettings((current) => !current)} style={styles.headerButton}>
+            <Image source={showSettings ? uiAssets.buttons.close : uiAssets.buttons.settings} style={styles.headerButtonImage} resizeMode="contain" />
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.content}>{showSettings ? <SettingsScreen /> : renderScreen(activeTab)}</View>
@@ -59,6 +73,17 @@ export const AppShell = (): React.JSX.Element => {
         {tabs.map((tab) => {
           const isActive = activeTab === tab && !showSettings;
           const isMission = tab === "missions";
+          const tabBackground = isMission && isActive ? uiAssets.buttons.tab.missionsActive : isActive ? uiAssets.buttons.tab.active : uiAssets.buttons.tab.inactive;
+          const iconName =
+            tab === "home"
+              ? "home"
+              : tab === "tasks"
+                ? "tasks"
+                : tab === "missions"
+                  ? "missions"
+                  : tab === "shop"
+                    ? "shop"
+                    : "avatar";
 
           return (
             <Pressable
@@ -67,22 +92,20 @@ export const AppShell = (): React.JSX.Element => {
                 setShowSettings(false);
                 setActiveTab(tab);
               }}
-              style={[
-                styles.tab,
-                isMission && styles.missionTab,
-                isActive && styles.tabActive,
-                isMission && isActive && styles.missionTabActive,
-              ]}
+              style={[styles.tab, isMission && styles.missionTab]}
             >
-              <Text
-                style={[
-                  styles.tabLabel,
-                  isMission && styles.missionTabLabel,
-                  isActive && styles.tabLabelActive,
-                ]}
-              >
-                {t(`tabs.${tab}`)}
-              </Text>
+              <ImageBackground source={tabBackground} style={styles.tabBackground} imageStyle={styles.tabBackgroundImage} resizeMode="stretch">
+                <PixelIcon name={iconName} size={26} style={isActive ? styles.tabIconActive : styles.tabIconInactive} />
+                <Text
+                  style={[
+                    styles.tabLabel,
+                    isMission && styles.missionTabLabel,
+                    isActive && styles.tabLabelActive,
+                  ]}
+                >
+                  {t(`tabs.${tab}`)}
+                </Text>
+              </ImageBackground>
             </Pressable>
           );
         })}
@@ -118,7 +141,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.sm,
-    paddingBottom: theme.spacing.sm,
+    paddingBottom: theme.spacing.xs,
+  },
+  headerInfo: {
+    flex: 1,
   },
   headerTitle: {
     color: theme.colors.text,
@@ -131,18 +157,18 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontWeight: "700",
   },
-  settingsButton: {
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 10,
-    borderRadius: theme.radius.pill,
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.xs,
   },
-  settingsLabel: {
-    color: theme.colors.text,
-    fontSize: 13,
-    fontWeight: "800",
+  headerButton: {
+    width: 52,
+    height: 52,
+  },
+  headerButtonImage: {
+    width: "100%",
+    height: "100%",
   },
   content: {
     flex: 1,
@@ -150,41 +176,44 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
     gap: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.sm,
+    paddingHorizontal: 10,
+    paddingTop: 4,
     paddingBottom: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
   },
   tab: {
     flex: 1,
-    minHeight: 52,
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.surfaceAlt,
-    alignItems: "center",
-    justifyContent: "center",
+    minHeight: 88,
   },
   missionTab: {
-    backgroundColor: "#FBE2A7",
     transform: [{ translateY: -6 }],
   },
-  tabActive: {
-    backgroundColor: theme.colors.primary,
+  tabBackground: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 10,
+    paddingBottom: 12,
+    gap: 4,
   },
-  missionTabActive: {
-    backgroundColor: "#F3B74E",
+  tabBackgroundImage: {
+    resizeMode: "stretch",
   },
   tabLabel: {
-    color: theme.colors.textMuted,
-    fontSize: 12,
+    color: "#E9D7B8",
+    fontSize: 10,
     fontWeight: "800",
   },
   missionTabLabel: {
-    color: theme.colors.text,
+    color: "#FFF7E0",
   },
   tabLabelActive: {
-    color: theme.colors.surface,
+    color: "#FFF7E0",
+  },
+  tabIconInactive: {
+    opacity: 0.92,
+  },
+  tabIconActive: {
+    opacity: 1,
   },
   syncText: {
     textAlign: "center",

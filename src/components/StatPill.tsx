@@ -1,38 +1,55 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { theme } from "../theme/tokens";
+import { PixelIcon } from "./PixelIcon";
+import { uiAssets, type UiIconName } from "../theme/uiAssets";
 
 interface StatPillProps {
   label: string;
   value: string;
+  iconName?: UiIconName;
 }
 
-export const StatPill = ({ label, value }: StatPillProps): React.JSX.Element => {
+export const StatPill = ({ label, value, iconName }: StatPillProps): React.JSX.Element => {
   return (
-    <View style={styles.pill}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
-    </View>
+    <ImageBackground source={uiAssets.bars.statCapsule} style={styles.pill} imageStyle={styles.pillImage} resizeMode="stretch">
+      <View style={styles.content}>
+        <View style={styles.topRow}>
+          {iconName ? <PixelIcon name={iconName} size={18} /> : null}
+          <Text style={styles.label}>{label}</Text>
+        </View>
+        <Text style={styles.value}>{value}</Text>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   pill: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
     minWidth: 96,
+    minHeight: 56,
+  },
+  pillImage: {
+    resizeMode: "stretch",
+  },
+  content: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     gap: 4,
   },
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
   label: {
-    color: theme.colors.textMuted,
+    color: "#EEE1C3",
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   value: {
-    color: theme.colors.text,
+    color: "#FFF8EE",
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "800",
   },
 });

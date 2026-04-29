@@ -29,19 +29,43 @@ export const AvatarScreen = (): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <Card style={styles.previewCard}>
+      <Card style={styles.previewCard} variant="panelDark">
         <AvatarPreview character={character} size="lg" />
         <Text style={styles.levelText}>{t("home.level", { level: progression.level })}</Text>
         <ProgressBar progress={((progression.level - 1) % 10 + 1) / 10} tone="secondary" />
         <Text style={styles.xpText}>{t("home.xp", { current: progression.xpIntoLevel, required: progression.xpRequiredForNextLevel })}</Text>
         <ProgressBar progress={progression.xpIntoLevel / progression.xpRequiredForNextLevel} tone="primary" />
         <View style={styles.toggleRow}>
-          <PrimaryButton label={t("avatar.achievements")} onPress={() => setActivePanel("achievements")} tone={activePanel === "achievements" ? "primary" : "secondary"} />
-          <PrimaryButton label={t("avatar.inventory")} onPress={() => setActivePanel("inventory")} tone={activePanel === "inventory" ? "primary" : "secondary"} />
+          <PrimaryButton
+            label={t("avatar.achievements")}
+            onPress={() => setActivePanel("achievements")}
+            tone={activePanel === "achievements" ? "accent" : "secondary"}
+            selected={activePanel === "achievements"}
+            style={styles.toggleButton}
+          />
+          <PrimaryButton
+            label={t("avatar.inventory")}
+            onPress={() => setActivePanel("inventory")}
+            tone={activePanel === "inventory" ? "accent" : "secondary"}
+            selected={activePanel === "inventory"}
+            style={styles.toggleButton}
+          />
         </View>
         <View style={styles.toggleRow}>
-          <PrimaryButton label={t("character.female")} onPress={() => setBodyType("female")} tone={character.bodyType === "female" ? "accent" : "secondary"} />
-          <PrimaryButton label={t("character.male")} onPress={() => setBodyType("male")} tone={character.bodyType === "male" ? "accent" : "secondary"} />
+          <PrimaryButton
+            label={t("character.female")}
+            onPress={() => setBodyType("female")}
+            tone={character.bodyType === "female" ? "accent" : "secondary"}
+            selected={character.bodyType === "female"}
+            style={styles.toggleButton}
+          />
+          <PrimaryButton
+            label={t("character.male")}
+            onPress={() => setBodyType("male")}
+            tone={character.bodyType === "male" ? "accent" : "secondary"}
+            selected={character.bodyType === "male"}
+            style={styles.toggleButton}
+          />
         </View>
       </Card>
 
@@ -70,6 +94,7 @@ export const AvatarScreen = (): React.JSX.Element => {
                         onPress={() => equipItem(category, item.id)}
                         disabled={!unlocked}
                         tone={equipped ? "accent" : "secondary"}
+                        selected={equipped}
                       />
                     </View>
                   );
@@ -113,6 +138,9 @@ const styles = StyleSheet.create({
   toggleRow: {
     flexDirection: "row",
     gap: theme.spacing.sm,
+  },
+  toggleButton: {
+    flex: 1,
   },
   panelTitle: {
     color: theme.colors.text,
